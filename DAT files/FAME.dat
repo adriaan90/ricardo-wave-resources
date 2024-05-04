@@ -1,0 +1,12 @@
+FUEL ===========================================================================
+FAME (Fatty Acid Methyl Esters) biodiesel; properties averaged from available published data or copied from methyl octadecanoate ! FUELAB
+ 18.86  37.72  2.0  0.0  38.0E+6  -0.352E+6  2078.  1700  -6699.05  ! C, H, O, N, FLHV, FHVAP, FLIQCP, TFREEZ, FSFORM
+ LIQUID  880.0                                          	 ! FUELTYP, FLIQ_DENSITY
+  298   500   700   900  1100  1300  1500 #                      ! FUTEMP()
+ 2181.4  2759.1  3331.2  3903.2  4475.2   5047.2  5619.2  #      ! FUELCP()
+ 0.21  0.79  0.0  0.0                                            ! O2, N2, CO2, H2O
+      298       322       350       370       395       440       510       580       660     691.9 # ! FLIQ_TEMPERATURE()
+ 0.8056E-3  0.2090E-1  0.4222E+0  0.2464E+1  0.1595E+2  0.2298E+3  0.4541E+4  0.3752E+5  0.2194E+6  0.3883E+6 # ! FLIQ_VPRESSURE()
+ 0.3619E-3  0.2036E-3  0.1152E-3  0.8085E-4  0.5467E-4  0.3028E-4  0.1488E-4  0.8693E-5  0.5412E-5  0.4621E-5 # ! FLIQ_VISCOSITY()
+ 0.4772E+2  0.4255E+2  0.3653E+2  0.3222E+2  0.2684E+2  0.1716E+2  0.2101E+1  5.333E-3   1.400E-3   4.737E-5 # ! FLIQ_STENSION()
+END ============================================================================
