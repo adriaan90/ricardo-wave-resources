@@ -1,0 +1,1077 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<WAVE class="main" version="2018.1">
+  <datfile units="SIMM">
+    BAS:CONSTANTS ==================================================================
+    A_F = 14.7
+    SPEED = 6000
+    BAS:DATASETS ===================================================================
+    BASIC:VELOCITY
+    BASIC:VOLUMETRIC_FLOW
+    VALVE:DISCHARGE_COEFFICIENT
+    VALVE:FLOW_COEFFICIENT
+    VALVE:LIFT_OVER_DIAMETER
+    **END_DATASETS**
+    BAS:GENERAL PARAMETERS =========================================================
+    30 0.8 1.0 SIMM auto
+    N N Y 0.01 1
+    INDOLENE ideal_gas n INTERPOLATION 1700.0
+    BAS:OUTPUT &amp; PLOTTING ==========================================================
+     0 0 0 0 0 0 0 0 0 0
+    N 0 0 auto
+    postscript Draft
+    ALL NULL CASE N Y
+    N N N N N
+    CASE 25
+    BAS:TIME PLOTS =================================================================
+    ttitles &quot;V2018.1&quot;
+    L:  0.0
+    P: 201   auto   auto   
+    J: cyl1 
+    BAS:TITLE ======================================================================
+    SI Tutorial, Single-Cylinder Gasoline Engine at {$casetitle}
+    CYL:HEAT_TRANSFER_MODELS =======================================================
+    woschni1
+    woschni_original
+    1.0 1.0
+    DUC:DUCT DATA ==================================================================
+    1.0 1.0
+    &quot; LEX   KJL   KJR   DL    DR   SDUCT  DX  TWALD  PDI  TDI   CFR CHT CP  CDL CDR  RHD&quot;
+    duct1 Intake orif1   40   35 100.0   35 300.0  1.0 300.0    0  1.5  0.0 auto auto 0
+    duct2 orif1 cyl1   35   35   50   35 310.0  1.0 300.0    0  1.5  0.0 auto auto 0
+    duct3 cyl1 orif2   28   28   90   40  400 1.05  900    0  1.5  0.0 auto auto 0
+    duct4 orif2 Exhaust   28   40  150   40  400 1.05  900    0  1.5  0.0 auto auto 0
+    DUC:SHAPE ======================================================================
+    duct1 CIRCULAR 40 35
+    duct2 CIRCULAR 35 35
+    duct3 CIRCULAR 28 28
+    duct4 CIRCULAR 28 40
+    ENG:GEOMETRY ===================================================================
+    1 4 MOT
+    78.1 82.0 150.0 0.0
+    10.0
+     1
+     0.0
+    0.35  0.005  400  0.2
+    0  0  0
+    0.0  0.0  0.0  0.0
+    ENG:OPERATING PARAMETERS =======================================================
+    {SPEED} 1.0 298.0
+    ENG:SI_WIEBE_COMB_MODELS =======================================================
+    siwiebe1
+    8.0 31 2.0 1.0 profile_limit
+    ENG:VALVES =====================================================================
+    &quot;NC, KEXC, (LEXD, IED, #NVD, L:LINK#--Repeated for each valve/duct)&quot;
+    1 cyl1 duct2 i #1 duct3 e #2
+    INJ:TYPE =======================================================================
+    1
+    prop 1
+    330 0.2 auto 0 0.3 0 auto
+    0.0 0.0 0.0 0.0 1.0
+    INJ:VOLUME =====================================================================
+    injector1 1 duct2 0 25
+    0 {1/A_F} 0
+    JUN:JUNCTION DATA ==============================================================
+    &quot; KEX    KT1/KT2   AUX1    AUX2    AUX3    AUX4    AUX5&quot;
+     cyl1     4     1 SINGLEZONE
+     Exhaust     3     1 AUTO 1.0 300.0 AUTO 0 FLOATING
+     Intake     3     1 AUTO 1.0 300.0 AUTO 0 FLOATING
+     orif1     1     1 auto
+     orif2     1     1 auto
+    VAL:VALVES =====================================================================
+    #1 lift 35 330 0 35
+    crank 0 1.0 1.414 1.0
+    FILE: SI1INT
+    FILE: CFTYP
+    --------------------------------------------------- !(separator)
+    #2 lift 28 105 0 28
+    crank 0 1.0 1.0 1.0
+    FILE: SI1EXH
+    FILE: CFTYP
+    END:RUN =======================================================================
+  </datfile>
+  <model>
+    <flowElements>
+      <cylinder name="cyl1">
+        <num value="1"/>
+        <boundaryConditions intakeSameAsHead="off" exhaustSameAsHead="off">
+          <pistonTemp value="520" units="K"/>
+          <linerTemp value="400" units="K"/>
+          <headTemp value="520" units="K"/>
+          <intakeValveTemp value="420" units="K"/>
+          <exhaustValveTemp value="480" units="K"/>
+          <swirlRatio value="0.0"/>
+        </boundaryConditions>
+        <geometry>
+          <bore value="78.1" units="mm"/>
+          <stroke value="82.0" units="mm"/>
+          <clearance value="2" units="mm"/>
+          <ahtPistFac value="1.0"/>
+          <ahtHeadFac value="1.6"/>
+          <conrodLength value="150.0" units="mm"/>
+          <wristPinOffset value="0.0" units="mm"/>
+          <compressionRatio value="10.0"/>
+        </geometry>
+        <gui>
+          <pistonSurfaceAreaDisplay value="4790.62" units="mm^2"/>
+          <headSurfaceAreaDisplay value="7665" units="mm^2"/>
+        </gui>
+        <subModels>
+          <combustion primaryModelName="siwiebe1" zones="SINGLEZONE"/>
+          <headGeometry primaryModelName="None"/>
+          <heatTransfer primaryModelName="woschni1" radiationModelName="None"/>
+          <turbulentFlow primaryModelName="None"/>
+        </subModels>
+      </cylinder>
+    </flowElements>
+    <case number="1">
+      <block name="BAS:CONSTANTS">
+        <constant name="A_F" value="14.7"/>
+        <constant name="SPEED" value="6000" units="rpm"/>
+        <pinned_constants>
+          <constant>SPEED</constant>
+        </pinned_constants>
+      </block>
+      <block name="BAS:GENERAL PARAMETERS">
+        <var type="text" name="autoconverge" val="0.01"/>
+        <var type="text" name="ccc" val="1"/>
+        <var type="text" name="compressibility" val="ideal_gas"/>
+        <var type="text" name="controls_convergence_tolerance" val="1.0e-7"/>
+        <var type="text" name="direct_propty_calc" val="INTERPOLATION"/>
+        <var type="text" name="dumpckp" val="N"/>
+        <var type="text" name="duration" val="30" units="cycles"/>
+        <var type="text" name="end_of_cycle_angle" val="auto" units="deg"/>
+        <var type="text" name="fuel1" val="fuel1"/>
+        <var type="text" name="fuel2" val="fuel2"/>
+        <var type="text" name="fuel3" val="fuel3"/>
+        <var type="fileref" name="fuelfile" ref_type="tag" val="INDOLENE"/>
+        <var type="text" name="fuels_number" val="1"/>
+        <var type="text" name="max_timestep_size" val="1.0" units="deg"/>
+        <var type="toggle" name="premixed1" val="on"/>
+        <var type="toggle" name="premixed2" val="on"/>
+        <var type="toggle" name="premixed3" val="on"/>
+        <var type="toggle" name="preserve_passive_scalars" val="n"/>
+        <var type="text" name="restart" val="N"/>
+        <var type="text" name="skipinit" val="Y"/>
+        <var type="text" name="t_freez" val="1700.0" units="K"/>
+        <var type="text" name="time_step_multipier" val="0.8"/>
+        <var type="text" name="units" val="SIMM"/>
+        <var type="toggle" name="use_controls_tolerance" val="n"/>
+      </block>
+      <block name="BAS:OUTPUT &amp; PLOTTING">
+        <var type="toggle" name="animate" val="N"/>
+        <var type="toggle" name="appsum" val="N"/>
+        <var type="toggle" name="dateandtime" val="N"/>
+        <var type="toggle" name="defaultreport" val="N"/>
+        <var type="toggle" name="diesel3d" val="N"/>
+        <var type="toggle" name="fixstep" val="NULL"/>
+        <var type="text" name="font" val="Draft"/>
+        <var type="array" name="iout" size="10">
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+          <val>0</val>
+        </var>
+        <var type="text" name="max_warnings" val="25"/>
+        <var type="text" name="plot_format" val="postscript"/>
+        <var type="toggle" name="rslsum" val="Y"/>
+        <var type="toggle" name="soundtrace" val="N"/>
+        <var type="toggle" name="steadytrace" val="N"/>
+        <var type="text" name="storage_interval" val="auto"/>
+        <var type="toggle" name="sumfile" val="Y"/>
+        <var type="text" name="sumfreq" val="CASE"/>
+        <var type="text" name="summary" val="ALL"/>
+        <var type="text" name="tzoom0" val="0" units="deg"/>
+        <var type="text" name="tzoom1" val="0" units="deg"/>
+        <var type="text" name="warnfreq" val="CASE"/>
+        <var type="toggle" name="writemon" val="N"/>
+        <var type="toggle" name="zoom" val="FULL"/>
+      </block>
+      <block name="DUC:DUCT DATA">
+        <global_friction_multiplier value="1.0"/>
+        <global_ht_multiplier value="1.0"/>
+        <duct name="duct1">
+          <var type="text" name="count" val="1"/>
+          <var type="text" name="discretization" val="35" units="mm"/>
+          <var type="text" name="friction" val="0"/>
+          <var type="text" name="heat_transfer" val="1.5"/>
+          <var type="text" name="left_discharge_coefficient" val="auto"/>
+          <var type="text" name="overall" val="100.0" units="mm"/>
+          <var type="text" name="pressure" val="1.0" units="bar"/>
+          <var type="text" name="pressure_loss" val="0.0"/>
+          <var type="text" name="right_discharge_coefficient" val="auto"/>
+          <var type="text" name="roughness_height" val="0" units="um"/>
+          <var type="text" name="temperature" val="300.0" units="K"/>
+          <var type="text" name="wall_temperature" val="300.0" units="K"/>
+          <connectivity left="Intake" right="orif1"/>
+          <appearance network="show">
+            <x _size="2">
+              220 
+              313.1 
+            </x>
+            <y _size="2">
+              640 
+              640 
+            </y>
+          </appearance>
+        </duct>
+        <duct name="duct2">
+          <var type="text" name="count" val="1"/>
+          <var type="text" name="discretization" val="35" units="mm"/>
+          <var type="text" name="friction" val="0"/>
+          <var type="text" name="heat_transfer" val="1.5"/>
+          <var type="text" name="left_discharge_coefficient" val="auto"/>
+          <var type="text" name="overall" val="50" units="mm"/>
+          <var type="text" name="pressure" val="1.0" units="bar"/>
+          <var type="text" name="pressure_loss" val="0.0"/>
+          <var type="text" name="right_discharge_coefficient" val="auto"/>
+          <var type="text" name="roughness_height" val="0" units="um"/>
+          <var type="text" name="temperature" val="300.0" units="K"/>
+          <var type="text" name="wall_temperature" val="310.0" units="K"/>
+          <connectivity left="orif1" right="cyl1"/>
+          <appearance network="show">
+            <x _size="2">
+              326.9 
+              425 
+            </x>
+            <y _size="2">
+              640 
+              640 
+            </y>
+          </appearance>
+        </duct>
+        <duct name="duct3">
+          <var type="text" name="count" val="1"/>
+          <var type="text" name="discretization" val="40" units="mm"/>
+          <var type="text" name="friction" val="0"/>
+          <var type="text" name="heat_transfer" val="1.5"/>
+          <var type="text" name="left_discharge_coefficient" val="auto"/>
+          <var type="text" name="overall" val="90" units="mm"/>
+          <var type="text" name="pressure" val="1.05" units="bar"/>
+          <var type="text" name="pressure_loss" val="0.0"/>
+          <var type="text" name="right_discharge_coefficient" val="auto"/>
+          <var type="text" name="roughness_height" val="0" units="um"/>
+          <var type="text" name="temperature" val="900" units="K"/>
+          <var type="text" name="wall_temperature" val="400" units="K"/>
+          <connectivity left="cyl1" right="orif2"/>
+          <appearance network="show">
+            <x _size="2">
+              455 
+              553.1 
+            </x>
+            <y _size="2">
+              640 
+              640 
+            </y>
+          </appearance>
+        </duct>
+        <duct name="duct4">
+          <var type="text" name="count" val="1"/>
+          <var type="text" name="discretization" val="40" units="mm"/>
+          <var type="text" name="friction" val="0"/>
+          <var type="text" name="heat_transfer" val="1.5"/>
+          <var type="text" name="left_discharge_coefficient" val="auto"/>
+          <var type="text" name="overall" val="150" units="mm"/>
+          <var type="text" name="pressure" val="1.05" units="bar"/>
+          <var type="text" name="pressure_loss" val="0.0"/>
+          <var type="text" name="right_discharge_coefficient" val="auto"/>
+          <var type="text" name="roughness_height" val="0" units="um"/>
+          <var type="text" name="temperature" val="900" units="K"/>
+          <var type="text" name="wall_temperature" val="400" units="K"/>
+          <connectivity left="orif2" right="Exhaust"/>
+          <appearance network="show">
+            <x _size="2">
+              566.9 
+              660 
+            </x>
+            <y _size="2">
+              640 
+              640 
+            </y>
+          </appearance>
+        </duct>
+      </block>
+      <block name="ENG:VALVES">
+        <eng_valves>
+          <var type="text" name="cylinder_number" val="1"/>
+          <var type="array" name="ied" size="2">
+            <val>i</val>
+            <val>e</val>
+          </var>
+          <var type="text" name="junction" val="cyl1"/>
+          <var type="array" name="lexd" size="2">
+            <val>duct2</val>
+            <val>duct3</val>
+          </var>
+          <var type="array" name="link" size="2">
+            <val></val>
+            <val></val>
+          </var>
+          <var type="text" name="numvalves" val="2"/>
+          <var type="array" name="nvd" size="2">
+            <val>1</val>
+            <val>2</val>
+          </var>
+        </eng_valves>
+      </block>
+      <block name="JUN:JUNCTION DATA">
+        <junction name="cyl1" type="4" subtype="1">
+          <var type="text" name="ahtHeadFac" val="1.6"/>
+          <var type="text" name="ahtPistFac" val="1.0"/>
+          <var type="text" name="bore" val="78.1" units="mm"/>
+          <var type="text" name="clearance" val="2" units="mm"/>
+          <var type="text" name="compressionRatio" val="10.0"/>
+          <var type="text" name="conrodLength" val="150.0" units="mm"/>
+          <var type="toggle" name="exhaustSameAsHead" val="off"/>
+          <var type="text" name="exhaustValveTemp" val="480" units="K"/>
+          <var type="text" name="headGeometryModelName" val="None"/>
+          <var type="text" name="headSurfaceAreaDisplay" val="7665" units="mm^2"/>
+          <var type="text" name="headTemp" val="520" units="K"/>
+          <var type="text" name="heatTransfer" val="woschni1"/>
+          <var type="toggle" name="intakeSameAsHead" val="off"/>
+          <var type="text" name="intakeValveTemp" val="420" units="K"/>
+          <var type="text" name="linerTemp" val="400" units="K"/>
+          <var type="text" name="cylinder_number" val="1"/>
+          <var type="text" name="pistonSurfaceAreaDisplay" val="4790.62" units="mm^2"/>
+          <var type="text" name="pistonTemp" val="520" units="K"/>
+          <var type="text" name="primaryModelName" val="siwiebe1"/>
+          <var type="text" name="radiationModelName" val="None"/>
+          <var type="text" name="stroke" val="82.0" units="mm"/>
+          <var type="text" name="swirlRatio" val="0.0"/>
+          <var type="text" name="turbulentFlowModelName" val="None"/>
+          <var type="text" name="wristPinOffset" val="0.0" units="mm"/>
+          <var type="text" name="zones" val="SINGLEZONE"/>
+          <appearance x="440" y="640" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Engine Cylinder"/>
+        </junction>
+        <junction name="Exhaust" type="3" subtype="1">
+          <var type="text" name="acoustic_end_correction" val="0" units="mm"/>
+          <var type="text" name="diameter" val="AUTO" units="mm"/>
+          <var type="text" name="discharge_coefficient" val="AUTO"/>
+          <var type="text" name="pressure" val="1.0" units="bar"/>
+          <var type="text" name="solution_type" val="FLOATING"/>
+          <var type="text" name="temperature" val="300.0" units="K"/>
+          <appearance x="680" y="640" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Ambient"/>
+        </junction>
+        <junction name="Intake" type="3" subtype="1">
+          <var type="text" name="acoustic_end_correction" val="0" units="mm"/>
+          <var type="text" name="diameter" val="AUTO" units="mm"/>
+          <var type="text" name="discharge_coefficient" val="AUTO"/>
+          <var type="text" name="pressure" val="1.0" units="bar"/>
+          <var type="text" name="solution_type" val="FLOATING"/>
+          <var type="text" name="temperature" val="300.0" units="K"/>
+          <appearance x="200" y="640" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Ambient"/>
+        </junction>
+        <junction name="orif1" type="1" subtype="1">
+          <var type="text" name="diameter" val="auto" units="mm"/>
+          <appearance x="320" y="640" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Orifice"/>
+        </junction>
+        <junction name="orif2" type="1" subtype="1">
+          <var type="text" name="diameter" val="auto" units="mm"/>
+          <appearance x="560" y="640" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Orifice"/>
+        </junction>
+      </block>
+      <block name="VAL:VALVES">
+        <valve name="1">
+          <var type="text" name="arm_length" val="0.0" units="mm"/>
+          <var type="text" name="bore_diameter" val="0.0" units="mm"/>
+          <var type="text" name="camcr" val="crank"/>
+          <var type="text" name="closing_duration" val="0.0" units="deg"/>
+          <var type="text" name="crank_timing" val="330" units="deg"/>
+          <var type="text" name="diameter" val="35" units="mm"/>
+          <var type="array" name="flow_coefficients_2d" size="0"/>
+          <var type="array" name="flow_ordinates" size="0"/>
+          <var type="fileref" name="flowcoeff_file" ref_type="tag" val="CFTYP"/>
+          <var type="fileref" name="force_file"/>
+          <var type="text" name="force_scaling" val="0.0"/>
+          <var type="array" name="forward_flow_coefficients" size="0"/>
+          <var type="text" name="fwd_flow_coeff" val="0.0"/>
+          <var type="text" name="head_diameter" val="0.0" units="mm"/>
+          <var type="text" name="heat_transfer_diameter" val="35" units="mm"/>
+          <var type="text" name="horizontal_scaling" val="1.0"/>
+          <var type="text" name="inner_seat_diameter" val="0.0" units="mm"/>
+          <var type="text" name="lash" val="0" units="mm"/>
+          <var type="array" name="lift_2d" size="0"/>
+          <var type="text" name="lift_curve_type" val="scurv"/>
+          <var type="fileref" name="lift_file" ref_type="tag" val="SI1INT"/>
+          <var type="text" name="lift_file_type" val="FILE"/>
+          <var type="text" name="lift_profile_type" val="THV"/>
+          <var type="text" name="max_lift" val="0.0" units="mm"/>
+          <var type="text" name="max_lift_to_stop" val="0.0" units="mm"/>
+          <var type="text" name="minimum_angle" val="0.0" units="deg"/>
+          <var type="text" name="open_duration" val="0.0" units="deg"/>
+          <var type="text" name="opening_duration" val="0.0" units="deg"/>
+          <var type="text" name="polynomial_type" val="user"/>
+          <var type="text" name="preload_distance" val="0.0" units="mm"/>
+          <var type="array" name="pressure_2d" size="0"/>
+          <var type="array" name="profile_coefficients" size="7">
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+          </var>
+          <var type="text" name="rev_flow_coeff" val="0.0"/>
+          <var type="array" name="reverse_flow_coefficients" size="0"/>
+          <var type="text" name="rocker_ratio" val="1.0"/>
+          <var type="text" name="shaft_diameter" val="0.0" units="mm"/>
+          <var type="text" name="solenoid_position" val="Open"/>
+          <var type="text" name="stem_diameter" val="0.0" units="mm"/>
+          <var type="text" name="stem_pressure" val="0.0" units="bar"/>
+          <var type="text" name="swirl_coefficient" val="0.0"/>
+          <var type="fileref" name="swirl_file"/>
+          <var type="fileref" name="turflame_file"/>
+          <var type="text" name="type" val="lift"/>
+          <var type="toggle" name="use_dvalve_r" val="on"/>
+          <var type="text" name="val_s_ang" val="45.0" units="deg"/>
+          <var type="text" name="val_s_thk" val="3.0" units="mm"/>
+          <var type="text" name="valve_timing" val="0" units="deg"/>
+          <var type="text" name="vertical_scaling" val="1.414"/>
+          <var type="text" name="vlifth_prof" val="0.0" units="mm"/>
+          <var type="text" name="vliftl_prof" val="0.0" units="mm"/>
+          <flow_coeff_type value="forward_reverse"/>
+          <swirl_coeff_type value="swirl_lift"/>
+          <use_turb_flame value="no"/>
+        </valve>
+        <valve name="2">
+          <var type="text" name="arm_length" val="0.0" units="mm"/>
+          <var type="text" name="bore_diameter" val="0.0" units="mm"/>
+          <var type="text" name="camcr" val="crank"/>
+          <var type="text" name="closing_duration" val="0.0" units="deg"/>
+          <var type="text" name="crank_timing" val="105" units="deg"/>
+          <var type="text" name="diameter" val="28" units="mm"/>
+          <var type="array" name="flow_coefficients_2d" size="0"/>
+          <var type="array" name="flow_ordinates" size="0"/>
+          <var type="fileref" name="flowcoeff_file" ref_type="tag" val="CFTYP"/>
+          <var type="fileref" name="force_file"/>
+          <var type="text" name="force_scaling" val="0.0"/>
+          <var type="array" name="forward_flow_coefficients" size="0"/>
+          <var type="text" name="fwd_flow_coeff" val="0.0"/>
+          <var type="text" name="head_diameter" val="0.0" units="mm"/>
+          <var type="text" name="heat_transfer_diameter" val="28" units="mm"/>
+          <var type="text" name="horizontal_scaling" val="1.0"/>
+          <var type="text" name="inner_seat_diameter" val="0.0" units="mm"/>
+          <var type="text" name="lash" val="0" units="mm"/>
+          <var type="array" name="lift_2d" size="0"/>
+          <var type="text" name="lift_curve_type" val="scurv"/>
+          <var type="fileref" name="lift_file" ref_type="tag" val="SI1EXH"/>
+          <var type="text" name="lift_file_type" val="FILE"/>
+          <var type="text" name="lift_profile_type" val="THV"/>
+          <var type="text" name="max_lift" val="0.0" units="mm"/>
+          <var type="text" name="max_lift_to_stop" val="0.0" units="mm"/>
+          <var type="text" name="minimum_angle" val="0.0" units="deg"/>
+          <var type="text" name="open_duration" val="0.0" units="deg"/>
+          <var type="text" name="opening_duration" val="0.0" units="deg"/>
+          <var type="text" name="polynomial_type" val="user"/>
+          <var type="text" name="preload_distance" val="0.0" units="mm"/>
+          <var type="array" name="pressure_2d" size="0"/>
+          <var type="array" name="profile_coefficients" size="7">
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+            <val>0.0</val>
+          </var>
+          <var type="text" name="rev_flow_coeff" val="0.0"/>
+          <var type="array" name="reverse_flow_coefficients" size="0"/>
+          <var type="text" name="rocker_ratio" val="1.0"/>
+          <var type="text" name="shaft_diameter" val="0.0" units="mm"/>
+          <var type="text" name="solenoid_position" val="Open"/>
+          <var type="text" name="stem_diameter" val="0.0" units="mm"/>
+          <var type="text" name="stem_pressure" val="0.0" units="bar"/>
+          <var type="text" name="swirl_coefficient" val="0.0"/>
+          <var type="fileref" name="swirl_file"/>
+          <var type="fileref" name="turflame_file"/>
+          <var type="text" name="type" val="lift"/>
+          <var type="toggle" name="use_dvalve_r" val="on"/>
+          <var type="text" name="val_s_ang" val="45.0" units="deg"/>
+          <var type="text" name="val_s_thk" val="3.0" units="mm"/>
+          <var type="text" name="valve_timing" val="0" units="deg"/>
+          <var type="text" name="vertical_scaling" val="1.0"/>
+          <var type="text" name="vlifth_prof" val="0.0" units="mm"/>
+          <var type="text" name="vliftl_prof" val="0.0" units="mm"/>
+          <flow_coeff_type value="forward_reverse"/>
+          <swirl_coeff_type value="swirl_lift"/>
+          <use_turb_flame value="no"/>
+        </valve>
+      </block>
+      <block name="BAS:DATASETS" writeblock="1">
+        <dataset name="BASIC:VELOCITY"/>
+        <dataset name="BASIC:VOLUMETRIC_FLOW"/>
+        <dataset name="VALVE:DISCHARGE_COEFFICIENT"/>
+        <dataset name="VALVE:FLOW_COEFFICIENT"/>
+        <dataset name="VALVE:LIFT_OVER_DIAMETER"/>
+      </block>
+      <block name="BAS:TIME PLOTS">
+        <var type="array" name="defaultlocs" size="1">
+          <val>0.0</val>
+        </var>
+        <timeplot>
+          <var type="text" name="passive_scalar_index" val="-1"/>
+          <var type="text" name="plot_name" val="auto"/>
+          <var type="text" name="type" val="201"/>
+          <var type="text" name="ymax" val="auto"/>
+          <var type="text" name="ymin" val="auto"/>
+          <timeplot_curve element_type="junction" element_name="cyl1"/>
+        </timeplot>
+      </block>
+      <block name="BAS:TITLE">
+        <text>SI Tutorial, Single-Cylinder Gasoline Engine at {$casetitle}</text>
+        <font face="Draft" size="10"/>
+      </block>
+      <block name="CYL:HEAT_TRANSFER_MODELS">
+        <heat_transfer name="woschni1">
+          <var type="text" name="heat_transfer_multiplier" val="1.0"/>
+          <var type="text" name="m_modelname" val="woschni1"/>
+          <var type="fileref" name="m_user_library"/>
+          <var type="text" name="model" val="woschni_original"/>
+          <var type="text" name="valve_closed_multiplier" val="1.0"/>
+          <var type="text" name="valve_open_multiplier" val="1.0"/>
+        </heat_transfer>
+      </block>
+      <block name="DUC:SHAPE">
+        <duc_shape name="duct1" shape="circular">
+          <var type="text" name="left_diameter" val="40" units="mm"/>
+          <var type="text" name="right_diameter" val="35" units="mm"/>
+        </duc_shape>
+        <duc_shape name="duct2" shape="circular">
+          <var type="text" name="left_diameter" val="35" units="mm"/>
+          <var type="text" name="right_diameter" val="35" units="mm"/>
+        </duc_shape>
+        <duc_shape name="duct3" shape="circular">
+          <var type="text" name="left_diameter" val="28" units="mm"/>
+          <var type="text" name="right_diameter" val="28" units="mm"/>
+        </duc_shape>
+        <duc_shape name="duct4" shape="circular">
+          <var type="text" name="left_diameter" val="28" units="mm"/>
+          <var type="text" name="right_diameter" val="40" units="mm"/>
+        </duc_shape>
+      </block>
+      <block name="ENG:GEOMETRY">
+        <var type="text" name="acf" val="0.35" units="bar"/>
+        <var type="text" name="bcf" val="0.005"/>
+        <var type="text" name="bore" val="78.1" units="mm"/>
+        <var type="text" name="ccf" val="400" units="Pa.min/m"/>
+        <var type="text" name="compression_ratio" val="10.0"/>
+        <var type="text" name="conrod_length" val="150.0" units="mm"/>
+        <var type="text" name="engine_type" val="MOT"/>
+        <var type="array" name="firing_order" size="1">
+          <val>1</val>
+        </var>
+        <var type="text" name="iout1" val="0"/>
+        <var type="text" name="iout2" val="0"/>
+        <var type="text" name="iout3" val="0"/>
+        <var type="text" name="ncyl" val="1"/>
+        <var type="text" name="num_strokes" val="4"/>
+        <var type="text" name="piston_bowl_volume" val="0.0" units="mm^3"/>
+        <var type="text" name="piston_cup_depth" val="0.0" units="mm"/>
+        <var type="text" name="piston_cup_dia" val="0.0" units="mm"/>
+        <var type="text" name="piston_cuprim_dia" val="0.0" units="mm"/>
+        <var type="text" name="qcf" val="0.2" units="Pa.min^2/m^2"/>
+        <var type="text" name="stroke" val="82.0" units="mm"/>
+        <var type="array" name="tdc" size="1">
+          <val>0.0</val>
+        </var>
+        <var type="text" name="wristpin_offset" val="0.0" units="mm"/>
+      </block>
+      <block name="ENG:OPERATING PARAMETERS">
+        <var type="text" name="reference_pressure" val="1.0" units="bar"/>
+        <var type="text" name="reference_temperature" val="298.0" units="K"/>
+        <var type="text" name="speed" val="{SPEED}" units="rpm"/>
+      </block>
+      <block name="ENG:SI_WIEBE_COMB_MODELS">
+        <si_wiebe_comb_model name="siwiebe1">
+          <var type="text" name="burn_duration" val="31" units="deg"/>
+          <var type="text" name="burn_fraction" val="1.0"/>
+          <var type="text" name="scale_or_limit" val="profile_limit"/>
+          <var type="text" name="thb50" val="8.0" units="deg"/>
+          <var type="text" name="wiebe_exponent" val="2.0"/>
+        </si_wiebe_comb_model>
+      </block>
+      <block name="INJ:TYPE">
+        <injector_type name="1">
+          <var type="text" name="air" val="0.0"/>
+          <var type="text" name="burned_air" val="0.0"/>
+          <var type="text" name="burned_fuel" val="0.0"/>
+          <var type="text" name="drop_diameter" val="auto" units="um"/>
+          <var type="text" name="evap_fraction" val="0.3"/>
+          <var type="text" name="flow_rate" val="0.0" units="kg/hr"/>
+          <var type="text" name="fuel_index" val="1"/>
+          <var type="text" name="fuel_vapor" val="0.0"/>
+          <var type="text" name="initial_velocity" val="auto"/>
+          <var type="text" name="liquid_fuel" val="1.0"/>
+          <var type="profile" name="mass_profile" numcol="2" size="2">
+            <column name="time" units="ms">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+            <column name="mass" units="mg">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+          </var>
+          <var type="text" name="mixture_temp" val="330" units="K"/>
+          <var type="profile" name="multipulse_mass_profile" numcol="8" size="2">
+            <column name="injpress" units="bar">
+              <val>bar</val>
+              <val>0.0</val>
+            </column>
+            <column name="starttime" units="deg">
+              <val>deg</val>
+              <val>0.0</val>
+            </column>
+            <column name="riseint" units="ms">
+              <val>deg</val>
+              <val>0.0</val>
+            </column>
+            <column name="platint" units="ms">
+              <val>deg</val>
+              <val>0.0</val>
+            </column>
+            <column name="fallint" units="ms">
+              <val>deg</val>
+              <val>0.0</val>
+            </column>
+            <column name="rise1" units=" ">
+              <val></val>
+              <val>0.0</val>
+            </column>
+            <column name="rise2" units=" ">
+              <val></val>
+              <val>0.0</val>
+            </column>
+            <column name="injmass" units="kg/hr">
+              <val>kg/hr</val>
+              <val>0.0</val>
+            </column>
+          </var>
+          <var type="text" name="nozzle_diameter" val="0.2" units="mm"/>
+          <var type="profile" name="pressure_profile" numcol="2" size="2">
+            <column name="crank_angle" units="deg">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+            <column name="pressure" units="bar">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+          </var>
+          <var type="fileref" name="profile_file"/>
+          <var type="profile" name="rate_profile" numcol="2" size="2">
+            <column name="crank_angle" units="deg">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+            <column name="rate">
+              <val>0.0</val>
+              <val>0.0</val>
+            </column>
+          </var>
+          <var type="text" name="sac_volume" val="0" units="mm^3"/>
+          <var type="text" name="spray_angle" val="0" units="deg"/>
+          <var type="text" name="type" val="prop"/>
+          <var type="text" name="velocity" val="200.0" units="m/s"/>
+        </injector_type>
+      </block>
+      <block name="INJ:VOLUME">
+        <injector name="injector1" injector_type_name="1">
+          <var type="text" name="duration" val="0.0" units="ms"/>
+          <var type="text" name="fa_ratio" val="{1/A_F}"/>
+          <var type="text" name="location" val="duct2"/>
+          <var type="text" name="mass" val="0.0" units="mg"/>
+          <var type="text" name="position" val="25" units="mm"/>
+          <var type="text" name="rate" val="0" units="kg/hr"/>
+          <var type="text" name="start" val="0" units="deg"/>
+          <var type="text" name="sync_cyl" val="0"/>
+          <var type="text" name="type" val="1"/>
+          <appearance x="360" y="720" scale="30" angle="0" autoangle="1" flip="0"
+             network="show"/>
+          <template name="Default Injector"/>
+        </injector>
+      </block>
+      <WAVE-RT/>
+    </case>
+    <template>
+      <element_template name="Default Ambient" type="junction" junction_type="3"
+         junction_subtype="1">
+        <var type="text" name="acoustic_end_correction" val="0.0" units="mm"/>
+        <var type="text" name="diameter" val="AUTO" units="mm"/>
+        <var type="text" name="discharge_coefficient" val="AUTO"/>
+        <var type="text" name="pressure" val="1.0" units="bar"/>
+        <var type="text" name="solution_type" val="FLOATING"/>
+        <var type="text" name="temperature" val="300.0" units="K"/>
+      </element_template>
+      <element_template name="Default Duct" type="duct:regular">
+        <var type="text" name="count" val="1"/>
+        <var type="text" name="discretization" val="30.0" units="mm"/>
+        <var type="text" name="friction" val="1.0"/>
+        <var type="text" name="heat_transfer" val="1.0"/>
+        <var type="text" name="left_discharge_coefficient" val="AUTO"/>
+        <var type="text" name="overall" val="100.0" units="mm"/>
+        <var type="text" name="pressure" val="1.0" units="bar"/>
+        <var type="text" name="pressure_loss" val="0.0"/>
+        <var type="text" name="right_discharge_coefficient" val="AUTO"/>
+        <var type="text" name="roughness_height" val="0" units="um"/>
+        <var type="text" name="temperature" val="300.0" units="K"/>
+        <var type="text" name="wall_temperature" val="300.0" units="K"/>
+        <duc_shape shape="circular">
+          <var type="text" name="left_diameter" val="0.0" units="mm"/>
+          <var type="text" name="right_diameter" val="0.0" units="mm"/>
+        </duc_shape>
+      </element_template>
+      <element_template name="Default Engine Cylinder" type="junction"
+         junction_type="4" junction_subtype="1">
+        <var type="text" name="ahtHeadFac" val="1.6"/>
+        <var type="text" name="ahtPistFac" val="1.0"/>
+        <var type="text" name="bore" val="78.1" units="mm"/>
+        <var type="text" name="clearance" val="2" units="mm"/>
+        <var type="text" name="compressionRatio" val="10.0"/>
+        <var type="text" name="conrodLength" val="150.0" units="mm"/>
+        <var type="toggle" name="exhaustSameAsHead" val="off"/>
+        <var type="text" name="exhaustValveTemp" val="480" units="K"/>
+        <var type="text" name="headGeometryModelName" val="None"/>
+        <var type="text" name="headSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="headTemp" val="520" units="K"/>
+        <var type="text" name="heatTransfer" val="None"/>
+        <var type="toggle" name="intakeSameAsHead" val="off"/>
+        <var type="text" name="intakeValveTemp" val="420" units="K"/>
+        <var type="text" name="linerTemp" val="400" units="K"/>
+        <var type="text" name="num" val="1"/>
+        <var type="text" name="pistonSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="pistonTemp" val="520" units="K"/>
+        <var type="text" name="primaryModelName" val="Motoring"/>
+        <var type="text" name="radiationModelName" val="None"/>
+        <var type="text" name="stroke" val="82.0" units="mm"/>
+        <var type="text" name="swirlRatio" val="0.0"/>
+        <var type="text" name="turbulentFlowModelName" val="None"/>
+        <var type="text" name="wristPinOffset" val="0.0" units="mm"/>
+        <var type="text" name="zones" val="SINGLEZONE"/>
+        <eng_valves>
+          <var type="array" name="ied" size="2">
+            <val>i</val>
+            <val>e</val>
+          </var>
+          <var type="array" name="lexd" size="2">
+            <val>000</val>
+            <val>000</val>
+          </var>
+          <var type="array" name="link" size="2">
+            <val></val>
+            <val></val>
+          </var>
+          <var type="text" name="numvalves" val="2"/>
+          <var type="array" name="nvd" size="2">
+            <val>1</val>
+            <val>2</val>
+          </var>
+        </eng_valves>
+      </element_template>
+      <element_template name="Default External Engine Cylinder" type="junction"
+         junction_type="4" junction_subtype="6">
+        <var type="text" name="ahtHeadFac" val="1.6"/>
+        <var type="text" name="ahtPistFac" val="1.0"/>
+        <var type="text" name="bore" val="78.1" units="mm"/>
+        <var type="text" name="clearance" val="2" units="mm"/>
+        <var type="text" name="compressionRatio" val="10.0"/>
+        <var type="text" name="conrodLength" val="150.0" units="mm"/>
+        <var type="text" name="exhaustValveTemp" val="450.0" units="K"/>
+        <var type="text" name="headSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="headTemp" val="520" units="K"/>
+        <var type="text" name="intakeValveTemp" val="400.0" units="K"/>
+        <var type="text" name="linerTemp" val="400" units="K"/>
+        <var type="text" name="num" val="1"/>
+        <var type="text" name="pistonSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="pistonTemp" val="520" units="K"/>
+        <var type="text" name="stroke" val="82.0" units="mm"/>
+        <var type="text" name="wristPinOffset" val="0.0" units="mm"/>
+        <eng_valves>
+          <var type="array" name="ied" size="2">
+            <val>i</val>
+            <val>e</val>
+          </var>
+          <var type="array" name="lexd" size="2">
+            <val>000</val>
+            <val>000</val>
+          </var>
+          <var type="array" name="link" size="2">
+            <val></val>
+            <val></val>
+          </var>
+          <var type="text" name="numvalves" val="2"/>
+          <var type="array" name="nvd" size="2">
+            <val>1</val>
+            <val>2</val>
+          </var>
+        </eng_valves>
+        <cnxnumbers val=""/>
+        <cnxnumbers val=""/>
+      </element_template>
+      <element_template name="Default Injector" type="injector" injector_type="prop">
+        <var type="text" name="duration" val="0.0" units="ms"/>
+        <var type="text" name="fa_ratio" val="0.0"/>
+        <var type="text" name="mass" val="0.0" units="mg"/>
+        <var type="text" name="position" val="0.0" units="mm"/>
+        <var type="text" name="rate" val="0.0" units="kg/hr"/>
+        <var type="text" name="start" val="0.0" units="deg"/>
+        <var type="text" name="type" val="prop"/>
+        <var type="text" name="air" val="0.0"/>
+        <var type="text" name="burned_air" val="0.0"/>
+        <var type="text" name="burned_fuel" val="0.0"/>
+        <var type="text" name="drop_diameter" val="auto" units="um"/>
+        <var type="text" name="evap_fraction" val="0.0"/>
+        <var type="text" name="flow_rate" val="0.0" units="kg/hr"/>
+        <var type="text" name="fuel_index" val="1"/>
+        <var type="text" name="fuel_vapor" val="0.0"/>
+        <var type="text" name="initial_velocity" val="auto"/>
+        <var type="text" name="liquid_fuel" val="1.0"/>
+        <var type="profile" name="mass_profile" numcol="2" size="2">
+          <column name="time" units="ms">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+          <column name="mass" units="mg">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+        </var>
+        <var type="text" name="mixture_temp" val="300.0" units="K"/>
+        <var type="profile" name="multipulse_mass_profile" numcol="8" size="1">
+          <column name="injpress" units="bar">
+            <val>0.0</val>
+          </column>
+          <column name="starttime" units="deg">
+            <val>0.0</val>
+          </column>
+          <column name="riseint" units="deg">
+            <val>0.0</val>
+          </column>
+          <column name="platint" units="deg">
+            <val>0.0</val>
+          </column>
+          <column name="fallint" units="deg">
+            <val>0.0</val>
+          </column>
+          <column name="rise1" units=" ">
+            <val>0.0</val>
+          </column>
+          <column name="rise2" units=" ">
+            <val>0.0</val>
+          </column>
+          <column name="injmass" units="kg/hr">
+            <val>0.0</val>
+          </column>
+        </var>
+        <var type="text" name="nozzle_diameter" val="0.2" units="mm"/>
+        <var type="profile" name="pressure_profile" numcol="2" size="2">
+          <column name="crank_angle" units="deg">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+          <column name="pressure" units="bar">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+        </var>
+        <var type="fileref" name="profile_file"/>
+        <var type="profile" name="rate_profile" numcol="2" size="2">
+          <column name="crank_angle" units="deg">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+          <column name="rate">
+            <val>0.0</val>
+            <val>0.0</val>
+          </column>
+        </var>
+        <var type="text" name="sac_volume" val="0.0" units="mm^3"/>
+        <var type="text" name="spray_angle" val="40" units="deg"/>
+        <var type="text" name="type" val="prop"/>
+        <var type="text" name="velocity" val="200.0" units="m/s"/>
+      </element_template>
+      <element_template name="Default Iris Cylinder" type="junction" junction_type="4"
+         junction_subtype="5">
+        <var type="text" name="ahtHeadFac" val="1.6"/>
+        <var type="text" name="ahtPistFac" val="1.0"/>
+        <var type="text" name="bore" val="78.1" units="mm"/>
+        <var type="text" name="clearance" val="2" units="mm"/>
+        <var type="text" name="compressionRatio" val="10.0"/>
+        <var type="text" name="conrodLength" val="150.0" units="mm"/>
+        <var type="text" name="exhaustValve2Temp" val="950" units="K"/>
+        <var type="text" name="exhaustValveTemp" val="950" units="K"/>
+        <var type="text" name="headCenterTemp" val="530" units="K"/>
+        <var type="text" name="headGeometryModelName" val="None"/>
+        <var type="text" name="headRimTemp" val="500" units="K"/>
+        <var type="text" name="headSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="headValveareaTemp" val="520" units="K"/>
+        <var type="text" name="heatTransfer" val="None"/>
+        <var type="text" name="intakeValve2Temp" val="750" units="K"/>
+        <var type="text" name="intakeValveTemp" val="750" units="K"/>
+        <var type="text" name="linerBottomTemp" val="390" units="K"/>
+        <var type="text" name="linerMiddleTemp" val="415" units="K"/>
+        <var type="text" name="linerTopTemp" val="460" units="K"/>
+        <var type="text" name="num" val="1"/>
+        <var type="text" name="pistonCrownTemp" val="550" units="K"/>
+        <var type="text" name="pistonCupBottomTemp" val="550" units="K"/>
+        <var type="text" name="pistonCupSideTemp" val="560" units="K"/>
+        <var type="text" name="pistonSurfaceAreaDisplay" val="1.0" units="mm^2"/>
+        <var type="text" name="primaryModelName" val="Motoring"/>
+        <var type="text" name="radiationModelName" val="None"/>
+        <var type="text" name="stroke" val="82.0" units="mm"/>
+        <var type="text" name="swirlRatio" val="0.0"/>
+        <var type="text" name="turbulentFlowModelName" val="None"/>
+        <var type="text" name="wristPinOffset" val="0.0" units="mm"/>
+        <var type="text" name="zones" val="SINGLEZONE"/>
+        <eng_valves>
+          <var type="array" name="ied" size="2">
+            <val>i</val>
+            <val>e</val>
+          </var>
+          <var type="array" name="lexd" size="2">
+            <val>000</val>
+            <val>000</val>
+          </var>
+          <var type="array" name="link" size="2">
+            <val></val>
+            <val></val>
+          </var>
+          <var type="text" name="numvalves" val="2"/>
+          <var type="array" name="nvd" size="2">
+            <val>1</val>
+            <val>2</val>
+          </var>
+        </eng_valves>
+      </element_template>
+      <element_template name="Default Orifice" type="junction" junction_type="1"
+         junction_subtype="1">
+        <var type="text" name="diameter" val="auto" units="mm"/>
+      </element_template>
+    </template>
+    <groups>
+      <group name="Engine">
+        <member element="cyl1"/>
+        <two_port isBlackBox="false" file=""/>
+      </group>
+      <group name="Exhaust Ports">
+        <member element="duct3"/>
+        <member element="duct4"/>
+        <member element="orif2"/>
+        <two_port isBlackBox="false" file=""/>
+      </group>
+      <group name="Intake Ports">
+        <member element="duct1"/>
+        <member element="duct2"/>
+        <member element="injector1"/>
+        <member element="orif1"/>
+        <two_port isBlackBox="false" file=""/>
+      </group>
+    </groups>
+    <caseTitleFormat>{SPEED} rpm</caseTitleFormat>
+  </model>
+  <fileProperties>
+    <description>tut_si1.wvm</description>
+    <author>pcn</author>
+    <created>October 5, 2003  12:14:35 PM</created>
+    <comments>Motored engine</comments>
+    <platform exe="win64"/>
+  </fileProperties>
+  <wgm>
+    <case number="1">
+      <junction id="orif1" x="320" y="640" scale="30" angle="0" autoangle="1"
+         templatename="Default Orifice"/>
+      <junction id="orif2" x="560" y="640" scale="30" angle="0" autoangle="1"
+         templatename="Default Orifice"/>
+      <junction id="cyl1" x="440" y="640" scale="30" angle="0" autoangle="1"
+         templatename="Default Engine Cylinder"/>
+      <junction id="Exhaust" x="680" y="640" scale="30" angle="180" autoangle="1"
+         templatename="Default Ambient"/>
+      <junction id="Intake" x="200" y="640" scale="30" angle="0" autoangle="1"
+         templatename="Default Ambient"/>
+      <duct id="duct1" templatename="Default Duct">
+        <x _size="2">
+          220 
+          313.1 
+        </x>
+        <y _size="2">
+          640 
+          640 
+        </y>
+      </duct>
+      <duct id="duct2" templatename="Default Duct">
+        <x _size="2">
+          326.9 
+          425 
+        </x>
+        <y _size="2">
+          640 
+          640 
+        </y>
+      </duct>
+      <duct id="duct3" templatename="Default Duct">
+        <x _size="2">
+          455 
+          553.1 
+        </x>
+        <y _size="2">
+          640 
+          640 
+        </y>
+      </duct>
+      <duct id="duct4" templatename="Default Duct">
+        <x _size="2">
+          566.9 
+          660 
+        </x>
+        <y _size="2">
+          640 
+          640 
+        </y>
+      </duct>
+    </case>
+    <junctionID _size="5">
+      0 
+      0 0 0 0 
+    </junctionID>
+    <ductID _size="4">
+      0 
+      0 0 0 
+    </ductID>
+    <layout>
+      <canvas xOrigin="-421.319" yOrigin="219.402" xSize="1951.6" ySize="894.482"/>
+      <annotations name="on" arrows="on" title="on" annotations="on" plots="on"
+         font="draft"/>
+      <grid visibility="lines" snap="on" xSpacing="40" ySpacing="40" gridThickness="7"
+         gridBrightness="15"/>
+      <network_mode flow="show" control="show"/>
+      <boundingBox xmin="200" xmax="680" ymin="640" ymax="680"/>
+    </layout>
+    <title>
+      <DisplaySettings Font="Draft" Fontsize="10"/>
+      <Text>SI Tutorial, Single-Cylinder Gasoline Engine at {$casetitle}</Text>
+    </title>
+  </wgm>
+  <RunSettings>
+    <RunWave UseNonDefault="false" UseBigWAVE="false" UseIncludeFile="false"
+       UseOutputDir="false" UseMapBased="false" MapBasedMode="old" UseMultipleCores="false"
+       NumberOfCores="2" RedirectConsoleOutput="false" SuppressWaveLive="false"/>
+    <Distribution UseDefaultOutputDirectory="true"/>
+    <Batch/>
+  </RunSettings>
+</WAVE>
